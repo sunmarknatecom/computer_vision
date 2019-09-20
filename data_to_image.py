@@ -1,6 +1,5 @@
-'''
-Convert Single Scale Data to opencv Image.
-'''
+# Copyright @ Mark S. Hong
+# Convert Single Scale Data to opencv Image.
 
 import numpy as np
 import cv2
