@@ -8,6 +8,7 @@ def making_img(file_name):
     ds = f.pixel_array
     cvt_ds = (((ds-np.min(ds))/np.max(ds-np.min(ds)))*255).astype(np.uint8)
     img = cv2.merge([cvt_ds,cvt_ds,cvt_ds])
+    # image shape = (512,512,3)
     return img
 
 # def making_video_from_imgs(imgs_array):
@@ -24,6 +25,7 @@ def investigate_img(img):
         cont_img = []
         ret, img_result = cv2.threshold(new_img, i, 255, cv2.THRESH_BINARY)
         img_result_gray = cv2.cvtColor(img_result, cv2.COLOR_BGR2GRAY)
+        # image_result_gray shape = (512,512)
         contours, hierarchy = cv2.findContours(img_result_gray, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         for j in range(len(contours)):
             new_cont_img = copy.copy(new_img)
