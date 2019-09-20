@@ -1,3 +1,5 @@
+# Copyright @ Mark S. Hong
+
 import pydicom
 import numpy as np
 import cv2
