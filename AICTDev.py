@@ -19,9 +19,9 @@ def making_img(file_name):
 #         out.write(imgs_array[i])
 #     out.release()
 
-def investigate_img(img):
+def investigate_img(img, fn):
     sudo_cont_img = []
-    out = cv2.VideoWriter('project.mp4', cv2.VideoWriter_fourcc(*'mp4v'),15,(512,512))
+    out = cv2.VideoWriter('project_%s.mp4' %fn, cv2.VideoWriter_fourcc(*'mp4v'),15,(512,512))
     for i in range(255):
         new_img = copy.copy(img)
         cont_img = []
@@ -40,20 +40,31 @@ def investigate_img(img):
             else:
                 pass
         sudo_cont_img.extend(cont_img)
-        for k in range(len(cont_img)):
-            cv2.imshow("img", cont_img[k])
-            cv2.waitKey(0)
+        # for k in range(len(cont_img)):
+        #     cv2.imshow("img", cont_img[k])
+        #     cv2.waitKey(0)
     for l in range(len(sudo_cont_img)):
         out.write(sudo_cont_img[l])
     out.release()
     cv2.destroyAllWindows()
     return
 
+def main_serial():
+    ### appendix start
+    file_name_ds = []
+    for i in range(275):
+        fnd = "IM-0001-0%03d.dcm" %(i+1)
+        file_name_ds.append(fnd)
+    ### appendix end
+    for j in range(275):
+        file_name = file_name_ds[j]
+        data = making_img(file_name)
+        investigate_img(data, file_name[9:12])
+
 def main():
-    file_name = input("Type the file name >>> ")
+    file_name = input("Type the file name >>>")
     data = making_img(file_name)
-    investigate_img(data)
-    return
+    investigate_img(data, file_name)
 
 if __name__ == '__main__':
     main()
