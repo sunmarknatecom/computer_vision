@@ -20,10 +20,15 @@ def making_img(file_name):
 #     out.release()
 
 def investigate_img(img, fn):
+    # fn is used in out definition line
+    # Total images list with contour and text
+    # Because threshold 0~255
     sudo_cont_img = []
+    # Initial Video
     out = cv2.VideoWriter('project_%s.mp4' %fn, cv2.VideoWriter_fourcc(*'mp4v'),15,(512,512))
     for i in range(255):
         new_img = copy.copy(img)
+
         cont_img = []
         ret, img_result = cv2.threshold(new_img, i, 255, cv2.THRESH_BINARY)
         img_result_gray = cv2.cvtColor(img_result, cv2.COLOR_BGR2GRAY)
@@ -33,9 +38,17 @@ def investigate_img(img, fn):
             new_cont_img = copy.copy(new_img)
             if cv2.contourArea(contours[j]) > 500:
                 cv2.drawContours(new_cont_img, contours, j, (0,255,0),2)
+                # Moment function
+                mmt = cv2.moments(contours[j])
+                cx = int(mmt['m10']/mmt['m00'])
+                cy = int(mmt['m01']/mmt['m00'])
+                # Moment function
+
                 cv2.putText(new_cont_img, "%d / %d / %d" %(j, len(contours),i), (20, 80), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 2)
                 cv2.putText(new_cont_img, "IMG/Cont/THRESH", (20, 50), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 2)
                 cv2.putText(new_cont_img, "AREA:"+str(cv2.contourArea(contours[j])),(20, 110), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 2)
+                # Display the moment
+                cv2.putText(new_cont_img, "%d / %d" %(cx, cy), (20, 480), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 2)
                 cont_img.append(new_cont_img)
             else:
                 pass
@@ -48,6 +61,41 @@ def investigate_img(img, fn):
     out.release()
     cv2.destroyAllWindows()
     return
+def single_img(img):
+    cont_img = []
+    ret, img_result = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY)
+    img_result_gray = cv2.cvtColor(img_result, cv2.COLOR_BGR2GRAY)
+    contours, hierarchy = cv2.findContours(img_result_gray, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    for j in range(len(contours)):
+        new_img = copy.copy(img)
+        if cv2.contourArea(contours[j]) > 500:
+            cv2.drawContours(new_img, contours, j, (0,255,0),2)
+            # Moment dictionary
+            mmt = cv2.moments(contours[j])
+            # print(mmt)
+            cx = int(mmt['m10']/mmt['m00'])
+            cy = int(mmt['m01']/mmt['m00'])
+
+            # Moments
+            # 1. Spatial Moments
+            #   m00, m10, m01, m20, m11, m02, m30, m21, m12, m03 (10)
+            # 2. Central Moments
+            #   mu20, mu11, mu02, mu30, mu21, mu12, mu03 (7)
+            # 3. Central Normalized Moments
+            #   nu20, nu11, nu02, nu30, nu21, nu03 (6)
+        
+            cv2.putText(new_img, "%d / %d" %(j, len(contours)), (20, 80), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 2)
+            cv2.putText(new_img, "IMG/Cont/THRESH", (20, 50), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 2)
+            cv2.putText(new_img, "AREA:"+str(cv2.contourArea(contours[j])),(20, 110), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 2)
+            # Display the moment
+            cv2.putText(new_img, "Moment %d / %d" %(cx, cy), (20, 480), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 2)
+            cont_img.append(new_img)
+        else:
+            pass
+    for i in range(len(cont_img)):
+        cv2.imshow("test", cont_img[i])
+        cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 def main_serial():
     ### appendix start
