@@ -15,6 +15,7 @@ tf.set_random_seed(seed)
 ds = np.loadtxt(input("Type the file name:\nex) ThoracicSurgery.csv\n>>>"), delimiter=",")
 
 length_labels = int(len(ds[0])-1)
+print("Dimensions of this data is %d" %length_labels)
 
 X = ds[:,:length_labels]
 Y = ds[:,length_labels]
