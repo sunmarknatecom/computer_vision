@@ -1,4 +1,5 @@
 ### Reference from: 모두의 딥러닝(2017, 길벗)
+### Moidifed by Mark S. Hong (2019/11/12)
 
 from keras.models import Sequential
 from keras.layers import Dense
